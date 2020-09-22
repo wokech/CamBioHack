@@ -1,0 +1,19 @@
+---
+title: "Anxiety and Revision"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r cars}
+library(tidyverse)
+data %>%
+ggplot(aes(Anxiety, Revise, color = Gender)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", se = FALSE) + 
+  facet_wrap(~Gender) + ggtitle("Assessing the relationship between Anxiety and Revision")
+```
+
