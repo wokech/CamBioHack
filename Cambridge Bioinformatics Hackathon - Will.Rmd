@@ -1,0 +1,101 @@
+---
+title: "Cambridge Bioinformatics Hackathon - Will"
+output: html_notebook
+---
+
+Load the required libraries
+
+```{r}
+library(tidyverse)
+library(skimr)
+library(DataExplorer)
+```
+
+Load the data
+
+```{r}
+data <- read.delim("C:/Users/willy/OneDrive/Desktop/Existing_Course_Data/Existing_Course_Data/R_Stats_Course_Data/exam.anxiety.dat")
+data
+```
+Explore the dataset
+
+```{r}
+dim(data)
+glimpse(data)
+```
+
+
+```{r}
+summary(data)
+```
+
+
+```{r}
+skim(data)
+```
+
+Create a report with the Data Explorer - this will output a file with a brief summary of the dataset.
+
+```{r}
+#DataExplorer::create_report(data)
+```
+
+# Distribution of Gender
+
+```{r}
+library(forcats)
+ggplot(mutate(data, Gender = fct_infreq(Gender))) + geom_bar(aes(x = Gender, fill = Gender)) + ggtitle("Distribution of Gender")
+```
+
+
+# Distribution of Exam results
+
+```{r}
+data %>%
+ggplot(aes(Exam, color = Gender, fill = Gender)) + 
+  geom_histogram() + 
+  facet_wrap(~Gender) + ggtitle("Distribution of Exam Results")
+```
+
+# Distribution of Anxiety scores
+
+```{r}
+data %>%
+ggplot(aes(Anxiety, color = Gender, fill = Gender)) + 
+  geom_histogram() + 
+  facet_wrap(~Gender) + ggtitle("Distribution of Anxiety Scores")
+```
+
+# Scatterplot to demonstrate the relationship between anxiety and revision.
+
+```{r}
+data %>%
+ggplot(aes(Anxiety, Revise, color = Gender)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", se = FALSE) + 
+  facet_wrap(~Gender) + ggtitle("Assessing the relationship between Anxiety and Revision")
+```
+
+# Obtain corrplot for the dataset
+
+```{r}
+#install.packages("corrplot")
+library(corrplot)
+```
+
+```{r}
+num_cols <- unlist(lapply(data, is.numeric))         # Identify numeric columns
+num_cols
+```
+
+
+```{r}
+num_data<-data[ , num_cols] 
+corrdata<-cor(num_data)
+head(round(corrdata,2))
+corrplot(corrdata, method = "number") 
+```
+This correlation plot indicates that there is:
+1) A strong negative relationship between anxiety and revision. This is to be expected as increased revision leads to a decrease in anxiety
+2) A moderate positive correlation between exam and revision but a moderate negative correlation between exam and anxiety.
+
